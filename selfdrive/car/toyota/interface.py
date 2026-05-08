@@ -100,6 +100,9 @@ class CarInterface(CarInterfaceBase):
     # TODO: make an adas dbc file for dsu-less models
     ret.radarUnavailable = DBC[candidate]['radar'] is None or candidate in (NO_DSU_CAR - TSS2_CAR)
 
+    # Retrofit: no radar installed — force unavailable to prevent radarFault NO_ENTRY
+    ret.radarUnavailable = True
+
     # if the smartDSU is detected, openpilot can send ACC_CONTROL and the smartDSU will block it from the DSU or radar.
     # since we don't yet parse radar on TSS2/TSS-P radar-based ACC cars, gate longitudinal behind experimental toggle
     use_sdsu = bool(ret.flags & ToyotaFlags.SMART_DSU)

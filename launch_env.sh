@@ -12,4 +12,8 @@ fi
 
 export STAGING_ROOT="/data/safe_staging"
 
+# Retrofit: force Toyota Corolla fingerprint, skip firmware query
+export FINGERPRINT="TOYOTA COROLLA"
+export SKIP_FW_QUERY=1
+
 eval "$(/data/openpilot/frogpilot/system/environment_variables)"

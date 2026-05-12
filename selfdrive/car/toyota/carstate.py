@@ -336,7 +336,7 @@ class CarState(CarStateBase):
 
     if CP.carFingerprint != CAR.TOYOTA_PRIUS_V:
       messages += [
-        ("LKAS_HUD", 1),
+        ("LKAS_HUD", 0),  # Retrofit: no camera CAN bus connected, 0 Hz prevents timeout/canValid failure
       ]
 
     if CP.carFingerprint in (TSS2_CAR - RADAR_ACC_CAR):

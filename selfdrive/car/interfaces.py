@@ -320,8 +320,8 @@ class CarInterfaceBase(ABC):
     # get CarState
     ret, fp_ret = self._update(c, frogpilot_toggles)
 
-    ret.canValid = all(cp.can_valid for cp in self.can_parsers if cp is not None)
-    # Retrofit: exclude cam parser from bus_timeout — no camera CAN bus physically connected
+    # Retrofit: exclude cam parser (cp_cam) — no camera CAN bus physically connected
+    ret.canValid = all(cp.can_valid for cp in self.can_parsers if cp is not None and cp != self.cp_cam)
     ret.canTimeout = any(cp.bus_timeout for cp in self.can_parsers if cp is not None and cp != self.cp_cam)
 
     if ret.vEgoCluster == 0.0 and not self.v_ego_cluster_seen:

@@ -101,6 +101,10 @@ class CarController(CarControllerBase):
     pcm_cancel_cmd = CC.cruiseControl.cancel
     lat_active = CC.latActive and abs(CS.out.steeringTorque) < MAX_USER_TORQUE
 
+    # Retrofit bench safety: kill steering if angle exceeds ±180° (SAS/EPS protection)
+    if abs(CS.out.steeringAngleDeg) > 180:
+      lat_active = False
+
     if len(CC.orientationNED) == 3:
       self.pitch.update(CC.orientationNED[1])
       self.pitch_slow.update(CC.orientationNED[1])

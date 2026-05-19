@@ -130,8 +130,10 @@ class CarInterface(CarInterfaceBase):
 
     # Retrofit: no stock longitudinal (no DSU/smartDSU/TSS2) — OP owns longitudinal via Comma Pedal
     # Must be after the stock detection logic above, which otherwise overwrites to False
+    # Gated by the "openpilot longitudinal control (alpha)" toggle (ExperimentalLongitudinalEnabled)
     ret.experimentalLongitudinalAvailable = True
-    ret.openpilotLongitudinalControl = True
+    if experimental_long and not frogpilot_toggles.disable_openpilot_long:
+      ret.openpilotLongitudinalControl = True
 
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
     ret.enableGasInterceptor = 0x201 in fingerprint[0] and ret.openpilotLongitudinalControl

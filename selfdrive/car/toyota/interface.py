@@ -103,10 +103,6 @@ class CarInterface(CarInterfaceBase):
     # Retrofit: no radar installed — force unavailable to prevent radarFault NO_ENTRY
     ret.radarUnavailable = True
 
-    # Retrofit: no stock longitudinal (no DSU/smartDSU/TSS2) — OP owns longitudinal via Comma Pedal
-    ret.experimentalLongitudinalAvailable = True
-    ret.openpilotLongitudinalControl = True
-
     # if the smartDSU is detected, openpilot can send ACC_CONTROL and the smartDSU will block it from the DSU or radar.
     # since we don't yet parse radar on TSS2/TSS-P radar-based ACC cars, gate longitudinal behind experimental toggle
     use_sdsu = bool(ret.flags & ToyotaFlags.SMART_DSU)
@@ -131,6 +127,11 @@ class CarInterface(CarInterfaceBase):
 
     ret.openpilotLongitudinalControl = use_sdsu or ret.enableDsu or candidate in (TSS2_CAR - RADAR_ACC_CAR) or bool(ret.flags & ToyotaFlags.DISABLE_RADAR.value)
     ret.openpilotLongitudinalControl &= not frogpilot_toggles.disable_openpilot_long
+
+    # Retrofit: no stock longitudinal (no DSU/smartDSU/TSS2) — OP owns longitudinal via Comma Pedal
+    # Must be after the stock detection logic above, which otherwise overwrites to False
+    ret.experimentalLongitudinalAvailable = True
+    ret.openpilotLongitudinalControl = True
 
     ret.autoResumeSng = ret.openpilotLongitudinalControl and candidate in NO_STOP_TIMER_CAR
     ret.enableGasInterceptor = 0x201 in fingerprint[0] and ret.openpilotLongitudinalControl
